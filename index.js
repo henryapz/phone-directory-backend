@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 app.use(express.json());
@@ -8,22 +9,22 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 
 const personsData = [
   {
-    id: 1,
+    id: uuidv4(),
     name: "Arto Bellas",
     number: "040-123456"
   },
   {
-    id: 2,
+    id: uuidv4(),
     name: "Ada Lovelace",
     number: "039-457834"
   },
   {
-    id: 3,
+    id: uuidv4(),
     name: "Dan Vargas",
     number: "040-178142"
   },
   {
-    id: 4,
+    id: uuidv4(),
     name: "Jaquin Velazques",
     number: "020-984321"
   }
@@ -43,8 +44,9 @@ app
 
     const indexOfName = personsData.findIndex((elem) => elem.name === name);
     if (indexOfName === -1) {
-      personsData.push({ id: Math.round(Math.random() * 10000), name, number });
-      return res.status(201).json({ name, number });
+      const newPerson = { id: uuidv4(), name, number }
+      personsData.push(newPerson);
+      return res.status(201).json(newPerson);
     }
 
     return res.status(400).send("Name must be unique");
@@ -70,9 +72,9 @@ app
   });
 
 app.get("/info", (req, res) => {
-  let actualData = new Date();
+  let actualDate = new Date();
   let textInfo =
-    `Phonebook has info for ${personsData.length} people <br>` + actualData;
+    `Phonebook has info for ${personsData.length} people <br>` + actualDate;
   res.send(textInfo);
 });
 
